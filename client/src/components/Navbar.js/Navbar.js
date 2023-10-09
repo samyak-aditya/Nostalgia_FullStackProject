@@ -56,10 +56,12 @@ const Navbar = () => {
             </Button>
           </div>
         ) : (
-          <Button component={Link} to="/auth" variant="contained" color="primary">
-            Sign In
-          </Button>
-        )}
+          location.pathname !== '/auth' && (
+            <Button component={Link} to="/auth" variant="contained" color="primary">
+              Sign In
+            </Button>
+          )
+          )}
       </Toolbar>
     </AppBar>
   );

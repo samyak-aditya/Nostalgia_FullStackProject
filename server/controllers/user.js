@@ -21,12 +21,12 @@ const publicKeyFullPath = path.join(publicKeyPath);
 const privateKey = fs.readFileSync(privateKeyFullPath, 'utf8');
 const publicKey = fs.readFileSync(publicKeyFullPath, 'utf8');
 export const signin = async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     
         
         try {
-            const oldUser = await User.findOne({ email });
+            const oldUser = await User.findOne({ username });
         
             if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
         
@@ -34,7 +34,7 @@ export const signin = async (req, res) => {
         
             if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
         const token = jwt.sign(
-            { email: oldUser.email, id: oldUser._id },
+            { username: oldUser.username, id: oldUser._id },
             privateKey,
             { algorithm: 'RS256', expiresIn: '1h' }
         );
@@ -46,11 +46,11 @@ export const signin = async (req, res) => {
 }
 
 export const signup = async (req, res) => {
-    const { email, password, confirmPassword, firstName, lastName } = req.body;
+    const { username, password, confirmPassword, firstName, lastName } = req.body;
 
     try {
         // Input validation
-        if (!email || !password || !confirmPassword || !firstName || !lastName) {
+        if (!username || !password || !confirmPassword || !firstName || !lastName) {
             return res.status(401).json({ message: "Please fill in all fields" });
         }
 
@@ -59,7 +59,7 @@ export const signup = async (req, res) => {
         }
 
         // Check if the user already exists
-        const oldUser = await User.findOne({ email });
+        const oldUser = await User.findOne({ username });
         if (oldUser) {
             return res.status(403).json({ message: "User already exists" });
         }
@@ -68,11 +68,11 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 12);
 
         // Create the user
-        const result = await User.create({ email, password: hashedPassword, name: `${firstName} ${lastName}` });
+        const result = await User.create({ username, password: hashedPassword, name: `${firstName} ${lastName}` });
 
         // Generate and send a JWT token
         const token = jwt.sign(
-            { email: result.email, id: result._id },
+            { username: result.username, id: result._id },
             privateKey,
             { algorithm: 'RS256', expiresIn: '1h' }
         );

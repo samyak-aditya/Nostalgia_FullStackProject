@@ -53,7 +53,7 @@ const Form = ({ currentId, setCurrentId }) => {
             <TextField name='creator' variant='outlined' label='Creator' fullWidth value={postData.creator}
             onChange={(e) => setPostData({ ...postData, creator: e.target.value})}
             />
-            <TextField name='title' variant='outlined' label='Title' fulllWidth 
+            <TextField name='title' variant='outlined' label='Title' fullWidth 
             value={postData.title}
             onChange={(e) => setPostData({ ...postData, title: e.target.value})}
             />
